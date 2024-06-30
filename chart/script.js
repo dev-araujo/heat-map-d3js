@@ -4,6 +4,7 @@ const width = 1000;
 const height = 600;
 const padding = 60;
 
+// Container do gráfico
 const svg = d3
   .select("#chart")
   .append("svg")
@@ -11,14 +12,13 @@ const svg = d3
   .attr("height", height);
 
 const tooltip = d3.select("#tooltip");
-
 const colors = ["#08306b", "#2171b5", "#6baed6", "#c6dbef", "#f7fbff"];
 
 d3.json(
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json"
 ).then((data) => {
-  const baseTemp = data.baseTemperature;
-  const monthlyData = data.monthlyVariance;
+  const baseTemp = data.baseTemperature; // temperatura
+  const monthlyData = data.monthlyVariance; // dados dos meses
 
   const years = Array.from(new Set(monthlyData.map((d) => d.year)));
   const months = [
@@ -36,18 +36,21 @@ d3.json(
     "December",
   ];
 
+  // x
   const xScale = d3
     .scaleBand()
     .domain(years)
     .range([padding, width - padding])
     .padding(0.01);
 
+  // y
   const yScale = d3
     .scaleBand()
     .domain(months)
     .range([padding, height - padding])
     .padding(0.01);
 
+  // escala de cores
   const colorScale = d3
     .scaleQuantile()
     .domain([
@@ -56,6 +59,7 @@ d3.json(
     ])
     .range(colors);
 
+  // eixo x desenhado
   svg
     .append("g")
     .attr("id", "x-axis")
@@ -67,6 +71,7 @@ d3.json(
         .tickFormat(d3.format("d"))
     );
 
+  // eixo y desenhado
   svg
     .append("g")
     .attr("id", "y-axis")
@@ -103,6 +108,7 @@ d3.json(
       tooltip.transition().style("visibility", "hidden");
     });
 
+  // legenda
   const legendWidth = 400;
   const legendHeight = 20;
   const legendPadding = 30;
